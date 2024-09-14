@@ -13,7 +13,7 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    loadChildren: () => import('./page/login/login.module').then( m => m.LOGINPageModule)
+    loadChildren: () => import('./page/login/login.module').then( m => m.LoginPageModule)
   },
   {
     path: 'crear-user',

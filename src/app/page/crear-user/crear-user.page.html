@@ -19,20 +19,25 @@
   <h1>Registro</h1>
 
   <ion-item>
-    <ion-input label="Ingrese su correo" type="email" placeholder="email@domain.com"></ion-input>
+    <ion-label position="floating">Ingrese su correo</ion-label>
+    <ion-input [(ngModel)]="email" type="email" placeholder="email@domain.com"></ion-input>
   </ion-item>
 
   <ion-item>
-    <ion-input label="Ingrese su contraseña" type="password" placeholder="Contraseña"></ion-input>
+    <ion-label position="floating">Ingrese su contraseña</ion-label>
+    <ion-input [(ngModel)]="passWord" type="password" placeholder="******"></ion-input>
   </ion-item>
 
-  <ion-button expand="full" shape="round" color="primary">Registrar</ion-button>
+  <div class="ion-text-center">
+    <ion-button  (click)="Registrar()">Registrar</ion-button>
+  </div>
+  
 </ion-content>
 
 
 <!-- Pie de página -->
 <ion-footer>
   <ion-toolbar>
-    <ion-title>Sacate al toke las zapatillas</ion-title>
+    <ion-title>Jon.Roa</ion-title>
   </ion-toolbar>
 </ion-footer>
