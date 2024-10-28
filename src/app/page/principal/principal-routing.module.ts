@@ -15,3 +15,4 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class PrincipalPageRoutingModule {}
+// hay que terminar el codigo bb
