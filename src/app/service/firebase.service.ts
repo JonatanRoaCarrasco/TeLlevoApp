@@ -23,7 +23,7 @@ export class FirebaseService {
     return request
 
   }
-  async logOuth(){
+  async logOut(){
     const request = await this.firebase.signOut()
    
 

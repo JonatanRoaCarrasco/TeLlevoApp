@@ -6,7 +6,7 @@ const redireccionarLogin = () => redirectUnauthorizedTo(['/login']);
 
 const routes: Routes = [
   {
-    path: 'principal',
+    path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
   {
@@ -15,7 +15,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'registro',
+    path: 'login',
     loadChildren: () => import('./page/login/login.module').then( m => m.LoginPageModule)
   },
   {
