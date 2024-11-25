@@ -1,16 +1,36 @@
+<!-- Menú lateral -->
+<ion-menu content-id="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>TeLlevoApp</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item routerLink="/login">Iniciar sesión</ion-item>
+      <ion-item routerLink="/crear-user">Crear cuenta</ion-item>
+      <ion-item routerLink="/recuperar-pass">Recuperar contraseña</ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
 <!-- Encabezado -->
 <ion-header>
   <ion-toolbar>
-    <div>
-      <ion-button slot="start"> 
-        <ion-back-button defaultHreferef="/"></ion-back-button>
-      </ion-button>
+    <!-- Botón para regresar en el lado izquierdo -->
+    <ion-button slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-button>
 
-      <img src="/assets/img/duoc.png" class="responsive-image" />
-    </div>
+    <!-- Logo de la aplicación -->
+    <img src="/assets/img/duoc.png" class="responsive-image" />
+
+    <!-- Botón para abrir el menú lateral en el lado derecho -->
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 
 <style>
   .responsive-image {
@@ -20,24 +40,19 @@
   }
 </style>
 
-
 <!-- Contenido -->
-<ion-content class="ion-padding">
+<ion-content id="main-content" class="ion-padding">
   <h1>Recuperar Contraseña</h1>
 
   <ion-item>
     <ion-label position="floating">Ingrese su correo</ion-label>
     <ion-input [(ngModel)]="email" type="email" placeholder="email@domain.com"></ion-input>
   </ion-item>
-  
+
   <div class="ion-text-center">
     <ion-button (click)="Recuperar()">Enviar correo</ion-button>
   </div>
-  
 </ion-content>
-
-
-
 
 <!-- Pie de página -->
 <ion-footer>
