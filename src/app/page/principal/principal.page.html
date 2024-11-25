@@ -1,44 +1,38 @@
-<!-- Encabezado -->
-<ion-header>
-  <ion-toolbar>
-    <img src="/assets/img/duoc.png" class="responsive-image" />
-  </ion-toolbar>
-</ion-header>
+<!-- Menú lateral -->
+<ion-menu content-id="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>TeLlevoApp</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item routerLink="/login">INICIAR SESION</ion-item>
+      <ion-item routerLink="/crear-user">CREAR CUENTA</ion-item>
+      <ion-item routerLink="/recuperar-pass">Recuperar contraseña</ion-item>
+      
+    </ion-list>
+  </ion-content>
+</ion-menu>
 
-<style>
-  .responsive-image {
-    width: 100%;
-    height: auto; /* Mantiene la proporción de la imagen */
-    object-fit: contain; /* Ajusta la imagen dentro del contenedor */
-  }
-</style>
+<!-- Página principal -->
+<ion-router-outlet id="main-content"></ion-router-outlet>
 
+<!-- Contenido principal -->
+<ion-content>
+  <ion-header>
+    <ion-toolbar>
+      <img src="/assets/img/duoc.png" class="responsive-image" />
+      <ion-buttons slot="end">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
 
-<!-- Contenido -->
-<ion-content class="ion-padding">
-  <h1>
-
-    <div>
-      <p>PAGINA PRINCIPAL</p>
-    </div>
-  </h1>
-<div>
-  <p>
-    Bienvenido:{{email}}
-  </p>
-
-
-</div>
- 
-  
+  <h1>PÁGINA PRINCIPAL</h1>
+  <p>Bienvenido: {{email}}</p>
+  <ion-button (click)="logOut()">Cerrar sesión</ion-button>
 </ion-content>
-
-<div>
-
-  <ion-button  (click)="logOut()">Cerrar sesión</ion-button>
-
-</div>
-
 
 <!-- Pie de página -->
 <ion-footer>

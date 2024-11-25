@@ -2,8 +2,30 @@
 <ion-header>
   <ion-toolbar>
     <img src="/assets/img/duoc.png" class="responsive-image" />
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
+<ion-menu content-id="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>TeLlevoApp</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item routerLink="/login">INICIAR SESION</ion-item>
+      <ion-item routerLink="/crear-user">CREAR CUENTA</ion-item>
+      <ion-item routerLink="/recuperar-pass">RECUPERAR CONTRASEÑA</ion-item>
+      
+
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-router-outlet id="main-content"></ion-router-outlet>
 
 <style>
   .responsive-image {
@@ -19,38 +41,37 @@
   <div>
     <h1>Ingresar</h1>
 
-      <ion-item>
-        <ion-label position="floating">Ingrese su correo</ion-label>
-        <ion-input [(ngModel)]="email" type="email" placeholder="email@domain.com"></ion-input>
-      </ion-item>
+    <ion-item>
+      <ion-label position="floating">Ingrese su correo</ion-label>
+      <ion-input [(ngModel)]="email" type="email" placeholder="email@domain.com"></ion-input>
+    </ion-item>
 
-      <ion-item>
-        <ion-label position="floating">Ingrese su contraseña</ion-label>
-        <ion-input [(ngModel)]="passWord" type="password" placeholder="******"></ion-input>
-      </ion-item>
-      <div class="ion-text-center">
-        <ion-button  (click)="login()">Ingresar</ion-button>
-      </div>
-      
+    <ion-item>
+      <ion-label position="floating">Ingrese su contraseña</ion-label>
+      <ion-input [(ngModel)]="passWord" type="password" placeholder="******"></ion-input>
+    </ion-item>
+    <div class="ion-text-center">
+      <ion-button (click)="login()">Ingresar</ion-button>
+    </div>
   </div>
-  
-  
+
   <div>
     <ion-grid>
       <ion-row>
         <ion-col class="Registrar ion-text-center ion-align-items-center">
           <div>
             <a [routerLink]="['/crear-user']">Registrar</a>
-          </div> 
+          </div>
         </ion-col>
         <ion-col class="Recuperar ion-text-center ion-align-items-center">
           <div>
             <a [routerLink]="['/recuperar-pass']">Recuperar</a>
           </div>
-        </ion-col>       
+        </ion-col>
       </ion-row>
     </ion-grid>
   </div>
+
 </ion-content>
 
 <!-- Pie de página -->
