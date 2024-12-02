@@ -14,49 +14,92 @@
   </ion-content>
 </ion-menu>
 
-<!-- Encabezado -->
-<ion-header>
-  <ion-toolbar>
-    <!-- Botón para regresar en el lado izquierdo -->
-    <ion-button slot="start">
-      <ion-back-button defaultHref="/"></ion-back-button>
-    </ion-button>
+<div class="page-container">
+  <!-- Encabezado -->
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/"></ion-back-button>
+      </ion-buttons>
 
-    <!-- Logo de la aplicación -->
-    <img src="/assets/img/duoc.png" class="responsive-image" />
+      <!-- Logo de la aplicación -->
+      <img src="/assets/img/duoc.png" class="responsive-image" alt="Logo Duoc"/>
 
-    <!-- Botón para abrir el menú lateral en el lado derecho -->
-    <ion-buttons slot="end">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+      <ion-buttons slot="end">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Contenido principal -->
+  <ion-content id="main-content" class="ion-padding">
+    <div class="content-container">
+      <h1 class="ion-text-center">Recuperar Contraseña</h1>
+      
+      <form class="form-container">
+        <ion-item>
+          <ion-label position="floating">Ingrese su correo</ion-label>
+          <ion-input [(ngModel)]="email" name="email" type="email" placeholder="email@domain.com"></ion-input>
+        </ion-item>
+
+        <div class="ion-text-center ion-padding-top">
+          <ion-button (click)="Recuperar()">Enviar correo</ion-button>
+        </div>
+      </form>
+    </div>
+  </ion-content>
+
+  <!-- Pie de página -->
+  <ion-footer class="footer">
+    <ion-toolbar>
+      <ion-title class="ion-text-center">Desarrollado por Jon.Roa</ion-title>
+    </ion-toolbar>
+  </ion-footer>
+</div>
 
 <style>
+  .page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  ion-content {
+    --padding-top: 20px;
+    --padding-bottom: 20px;
+    flex: 1;
+  }
+
+  .content-container {
+    min-height: calc(100vh - 160px);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .footer {
+    margin-top: auto;
+  }
+
   .responsive-image {
-    width: 100%;
-    height: auto; /* Mantiene la proporción de la imagen */
-    object-fit: contain; /* Ajusta la imagen dentro del contenedor */
+    max-width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+  }
+
+  ion-item {
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    margin-bottom: 24px;
+    color: var(--ion-color-primary);
   }
 </style>
-
-<!-- Contenido -->
-<ion-content id="main-content" class="ion-padding">
-  <h1>Recuperar Contraseña</h1>
-
-  <ion-item>
-    <ion-label position="floating">Ingrese su correo</ion-label>
-    <ion-input [(ngModel)]="email" type="email" placeholder="email@domain.com"></ion-input>
-  </ion-item>
-
-  <div class="ion-text-center">
-    <ion-button (click)="Recuperar()">Enviar correo</ion-button>
-  </div>
-</ion-content>
-
-<!-- Pie de página -->
-<ion-footer>
-  <ion-toolbar>
-    <ion-title>Jon.Roa</ion-title>
-  </ion-toolbar>
-</ion-footer>

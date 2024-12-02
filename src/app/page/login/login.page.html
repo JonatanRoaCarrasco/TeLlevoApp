@@ -1,39 +1,35 @@
-<!-- Encabezado -->
-<ion-header>
-  <ion-toolbar>
-    <img src="/assets/img/duoc.png" class="responsive-image" />
-    <ion-buttons slot="end">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
+<!-- Menú lateral -->
 <ion-menu content-id="main-content">
   <ion-header>
     <ion-toolbar color="primary">
       <ion-title>TeLlevoApp</ion-title>
     </ion-toolbar>
   </ion-header>
+
   <ion-content>
     <ion-list>
       <ion-item routerLink="/login">INICIAR SESION</ion-item>
       <ion-item routerLink="/crear-user">CREAR CUENTA</ion-item>
-      <ion-item routerLink="/recuperar-pass">RECUPERAR CONTRASEÑA</ion-item>
-      
-
+      <ion-item routerLink="/recuperar-pass">Recuperar contraseña</ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>
 
-<ion-router-outlet id="main-content"></ion-router-outlet>
+<!-- Encabezado -->
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
 
-<style>
-  .responsive-image {
-    width: 100%;
-    height: auto; /* Mantiene la proporción de la imagen */
-    object-fit: contain; /* Ajusta la imagen dentro del contenedor */
-  }
-</style>
+    <!-- Logo de la aplicación -->
+    <img src="/assets/img/duoc.png" class="responsive-image" alt="Logo Duoc"/>
+
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
 <!-- Contenido -->
 <ion-content class="ion-padding">
@@ -77,6 +73,35 @@
 <!-- Pie de página -->
 <ion-footer>
   <ion-toolbar>
-    <ion-title>Jon.Roa</ion-title>
+    <ion-title class="ion-text-center">Desarrollado por Jon.Roa</ion-title>
   </ion-toolbar>
 </ion-footer>
+
+<style>
+  .responsive-image {
+    max-width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+  }
+
+  ion-content {
+    --padding-top: 20px;
+    --padding-bottom: 20px;
+  }
+
+  form {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  ion-item {
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    margin-bottom: 24px;
+    color: var(--ion-color-primary);
+  }
+</style>
