@@ -87,4 +87,4 @@ export class LoginPage implements OnInit {
       throw error; // Relanzar el error para manejarlo en login()
     }
   }
-}
+} 
