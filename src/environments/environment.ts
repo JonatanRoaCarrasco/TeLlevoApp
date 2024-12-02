@@ -2,6 +2,8 @@
 // `ng build` reemplaza `environment.ts` con `environment.prod.ts`.
 // La lista de reemplazos de archivos se puede encontrar en `angular.json`.
 
+import { TestApiPageRoutingModule } from "src/app/page/test-api/test-api-routing.module";
+
 export const environment = {
   production: false,
   firebaseConfig: {
@@ -12,7 +14,8 @@ export const environment = {
     messagingSenderId: "875567384773",
     appId: "1:875567384773:web:c2f0f6e6f9c3acb77ec8ac",
     measurementId: "G-WS1Z4L4DVP"
-  }
+  },
+  apiUrl:"https://uber-nodejs-server-git-d61f89-guillermovillacuratorres-projects.vercel.app/api/" //uber.matiivilla.cl
 };
 
 /*

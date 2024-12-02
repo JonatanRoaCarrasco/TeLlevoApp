@@ -1,17 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import { IonicModule } from '@ionic/angular';
-import { CrearUserPageRoutingModule } from './crear-user-routing.module';
-import { CrearUserPage } from './crear-user.page';
+
+import { TestApiPageRoutingModule } from './test-api-routing.module';
+
+import { TestApiPage } from './test-api.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CrearUserPageRoutingModule
+    TestApiPageRoutingModule
   ],
-  declarations: [CrearUserPage]
+  declarations: [TestApiPage]
 })
-export class CrearUserPageModule { }
+export class TestApiPageModule {}

@@ -1,17 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import { IonicModule } from '@ionic/angular';
-import { CrearUserPageRoutingModule } from './crear-user-routing.module';
-import { CrearUserPage } from './crear-user.page';
+
+import { ListaVehiculosPageRoutingModule } from './lista-vehiculos-routing.module';
+
+import { ListaVehiculosPage } from './lista-vehiculos.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CrearUserPageRoutingModule
+    ListaVehiculosPageRoutingModule
   ],
-  declarations: [CrearUserPage]
+  declarations: [ListaVehiculosPage]
 })
-export class CrearUserPageModule { }
+export class ListaVehiculosPageModule {}

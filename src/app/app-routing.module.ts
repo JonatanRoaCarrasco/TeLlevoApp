@@ -34,7 +34,19 @@ const routes: Routes = [
   {
     path:'**',
     component: PageNotFoundComponent
+  },  {
+    path: 'test-api',
+    loadChildren: () => import('./page/test-api/test-api.module').then( m => m.TestApiPageModule)
   },
+  {
+    path: 'agregar-vehiculo',
+    loadChildren: () => import('./page/agregar-vehiculo/agregar-vehiculo.module').then( m => m.AgregarVehiculoPageModule)
+  },
+  {
+    path: 'lista-vehiculos',
+    loadChildren: () => import('./page/lista-vehiculos/lista-vehiculos.module').then( m => m.ListaVehiculosPageModule)
+  },
+
 ];
 
 @NgModule({
