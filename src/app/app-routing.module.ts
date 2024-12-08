@@ -28,13 +28,11 @@ const routes: Routes = [
   },
   {
     path: 'principal',
-    canActivate:[AngularFireAuthGuard], data:{authGuardPipe: redireccionarLogin},
+    canActivate:[AngularFireAuthGuard], 
+    data:{authGuardPipe: redireccionarLogin},
     loadChildren: () => import('./page/principal/principal.module').then( m => m.PrincipalPageModule)
   },
   {
-    path:'**',
-    component: PageNotFoundComponent
-  },  {
     path: 'test-api',
     loadChildren: () => import('./page/test-api/test-api.module').then( m => m.TestApiPageModule)
   },
@@ -46,7 +44,10 @@ const routes: Routes = [
     path: 'lista-vehiculos',
     loadChildren: () => import('./page/lista-vehiculos/lista-vehiculos.module').then( m => m.ListaVehiculosPageModule)
   },
-
+  {
+    path:'**',
+    component: PageNotFoundComponent
+  }
 ];
 
 @NgModule({

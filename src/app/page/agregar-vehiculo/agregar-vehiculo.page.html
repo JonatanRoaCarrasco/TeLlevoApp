@@ -1,13 +1,132 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>agregar-vehiculo</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">agregar-vehiculo</ion-title>
+<ion-menu content-id="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>TeLlevoApp</ion-title>
     </ion-toolbar>
   </ion-header>
-</ion-content>
+
+  <ion-content>
+    <ion-list>
+      <ion-item routerLink="/login">INICIAR SESION</ion-item>
+      <ion-item routerLink="/crear-user">CREAR CUENTA</ion-item>
+      <ion-item routerLink="/recuperar-pass">Recuperar contraseña</ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<div class="page-container">
+  <!-- Encabezado -->
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/principal"></ion-back-button>
+      </ion-buttons>
+
+      <!-- Logo de la aplicación -->
+      <img src="/assets/img/duoc.png" class="responsive-image" alt="Logo Duoc"/>
+
+      <ion-buttons slot="end">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Contenido principal -->
+  <ion-content id="main-content" class="ion-padding">
+    <div class="content-container">
+      <h1 class="ion-text-center">Agregar Vehículo</h1>
+      
+      <form class="form-container">
+        <ion-item>
+          <ion-label position="floating">Patente</ion-label>
+          <ion-input [(ngModel)]="patente" name="patente" type="text" required placeholder="XXXX00"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Marca</ion-label>
+          <ion-input [(ngModel)]="marca" name="marca" type="text" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Modelo</ion-label>
+          <ion-input [(ngModel)]="modelo" name="modelo" type="text" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Año</ion-label>
+          <ion-input [(ngModel)]="anio" name="anio" type="number" required min="1900" max="2024"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Color</ion-label>
+          <ion-input [(ngModel)]="color" name="color" type="text" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Tipo de Combustible</ion-label>
+          <ion-select [(ngModel)]="tipoCombustible" name="tipoCombustible" required>
+            <ion-select-option value="Gasolina">Gasolina</ion-select-option>
+            <ion-select-option value="Diesel">Diesel</ion-select-option>
+            <ion-select-option value="Gas">Gas</ion-select-option>
+            <ion-select-option value="Eléctrico">Eléctrico</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Foto del vehículo</ion-label>
+          <ion-button (click)="selectImageSource()">
+            <ion-icon slot="start" name="camera"></ion-icon>
+            Añadir foto
+          </ion-button>
+        </ion-item>
+
+        <div class="ion-text-center ion-padding-top">
+          <ion-button (click)="agregarVehiculo()">Registrar Vehículo</ion-button>
+        </div>
+      </form>
+    </div>
+  </ion-content>
+
+  <!-- Pie de página -->
+  <ion-footer class="footer">
+    <ion-toolbar>
+      <ion-title class="ion-text-center">Desarrollado por Jon.Roa</ion-title>
+    </ion-toolbar>
+  </ion-footer>
+</div>
+
+<style>
+  .page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .content-container {
+    flex: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .responsive-image {
+    max-width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+  }
+
+  ion-item {
+    margin-bottom: 16px;
+  }
+
+  .form-container {
+    margin-bottom: 30px;
+  }
+
+  h1 {
+    margin-bottom: 24px;
+    color: var(--ion-color-primary);
+  }
+</style>
