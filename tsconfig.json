@@ -19,7 +19,7 @@
     "target": "es2022",
     "module": "es2020",
     "lib": [
-      "es2018", 
+      "es2019",  // Cambiado de "es2018" a "es2019"
       "dom"
     ],
     "useDefineForClassFields": false
@@ -31,3 +31,4 @@
     "strictTemplates": true
   }
 }
+
