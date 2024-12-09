@@ -30,21 +30,21 @@ export class LoginPage implements OnInit {
     try {
       let usuario = await this.firebase.auth(this.email, this.passWord);
       this.tokenID = await usuario.user?.getIdToken();
-        
-      // Obtener el ID del usuario desde el backend
+  
+      // Primero obtener datos del usuario
       const userInfo = await this.apiService.obtenerUsuario({
         p_correo: this.email,
         token: this.tokenID
       });
   
-      const datosAGuardar = {
+      console.log('Respuesta del servidor:', userInfo);
+  
+      // Guardar en storage con el ID correcto
+      await this.storage.agregarStorage({
         email: this.email,
         token: this.tokenID,
-        idUsuario: userInfo.data[0].id_usuario
-      };
-  
-      await this.storage.agregarStorage(datosAGuardar);
-      console.log('Datos guardados:', datosAGuardar);
+        idUsuario: userInfo.data[0].id // Asegúrate que sea el campo correcto
+      });
   
       this.router.navigate(['/principal']);
     } catch (error) {
