@@ -69,30 +69,23 @@ export class ApiService {
     }
   }
 
-  async agregarVehiculo(data: bodyVehiculo, imageFile: File) {
-    try {
-      const formData = new FormData();
-      formData.append('p_id_usuario', data.p_id_usuario.toString());
-      formData.append('p_patente', data.p_patente);
-      formData.append('p_marca', data.p_marca);
-      formData.append('p_modelo', data.p_modelo);
-      formData.append('p_anio', data.p_anio.toString());
-      formData.append('p_color', data.p_color);
-      formData.append('p_tipo_combustible', data.p_tipo_combustible);
-      if (data.token) {
-        formData.append('token', data.token);
+  async agregarVehiculo(vehiculoData: any, imagen: File): Promise<any> {
+    const formData = new FormData();
+    formData.append('p_id_usuario', vehiculoData.p_id_usuario.toString());
+    formData.append('p_patente', vehiculoData.p_patente);
+    formData.append('p_marca', vehiculoData.p_marca);
+    formData.append('p_modelo', vehiculoData.p_modelo);
+    formData.append('p_anio', vehiculoData.p_anio.toString());
+    formData.append('p_color', vehiculoData.p_color);
+    formData.append('p_tipo_combustible', vehiculoData.p_tipo_combustible);
+    formData.append('token', vehiculoData.token);
+    formData.append('image', imagen, 'vehiculo.jpg');
+  
+    return this.http.post('/api/vehiculo/agregar', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
       }
-      if (imageFile) {
-        formData.append('image', imageFile, imageFile.name);
-      }
-      const response = await lastValueFrom(
-        this.http.post<any>(`${this.apiURL}vehiculo/agregar`, formData)
-      );
-      return response;
-    } catch (error) {
-      console.error('Error en agregarVehiculo:', error);
-      throw error;
-    }
+    }).toPromise();
   }
 
   async obtenerUsuario(data: dataGetUser){

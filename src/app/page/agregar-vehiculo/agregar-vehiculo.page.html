@@ -74,14 +74,28 @@
 
         <ion-item>
           <ion-label>Foto del vehículo</ion-label>
-          <ion-button (click)="selectImageSource()">
-            <ion-icon slot="start" name="camera"></ion-icon>
-            Añadir foto
-          </ion-button>
+          <ion-buttons slot="end">
+            <ion-button (click)="takePicture()">
+              <ion-icon slot="start" name="camera"></ion-icon>
+              Cámara
+            </ion-button>
+            <ion-button (click)="pickFromGallery()">
+              <ion-icon slot="start" name="images"></ion-icon>
+              Galería
+            </ion-button>
+          </ion-buttons>
         </ion-item>
 
+        <!-- Vista previa de la imagen -->
+        <div *ngIf="previewImage" class="image-preview">
+          <img [src]="previewImage" alt="Vista previa">
+        </div>
+
         <div class="ion-text-center ion-padding-top">
-          <ion-button (click)="agregarVehiculo()">Registrar Vehículo</ion-button>
+          <ion-button (click)="agregarVehiculo()" expand="block">
+            <ion-icon slot="start" name="car"></ion-icon>
+            Registrar Vehículo
+          </ion-button>
         </div>
       </form>
     </div>
@@ -128,5 +142,17 @@
   h1 {
     margin-bottom: 24px;
     color: var(--ion-color-primary);
+  }
+
+  .image-preview {
+    margin: 20px auto;
+    max-width: 300px;
+    text-align: center;
+  }
+  
+  .image-preview img {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   }
 </style>

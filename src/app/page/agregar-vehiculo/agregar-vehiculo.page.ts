@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, ActionSheetController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import { ApiService } from 'src/app/service/api.service';
+import { SotorageService } from 'src/app/service/sotorage.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 @Component({
@@ -17,46 +18,27 @@ export class AgregarVehiculoPage implements OnInit {
   color: string = '';
   tipoCombustible: string = '';
   archivoImagen: File | null = null;
-  token: string = ''; // Obtener del storage
-  idUsuario: number = 0; // Obtener del storage o servicio
+  previewImage: string | undefined;
+  token: string = '';
+  idUsuario: number = 0;
 
   constructor(
     private router: Router,
     private alertController: AlertController,
-    private actionSheetController: ActionSheetController,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private storage: SotorageService
   ) { }
 
-  ngOnInit() {
-    // Aquí podrías obtener el token y el id de usuario del storage
-  }
-
-  async selectImageSource() {
-    const actionSheet = await this.actionSheetController.create({
-      header: 'Seleccionar fuente de imagen',
-      buttons: [
-        {
-          text: 'Tomar foto',
-          icon: 'camera',
-          handler: () => {
-            this.takePicture();
-          }
-        },
-        {
-          text: 'Elegir de galería',
-          icon: 'image',
-          handler: () => {
-            this.pickFromGallery();
-          }
-        },
-        {
-          text: 'Cancelar',
-          icon: 'close',
-          role: 'cancel'
-        }
-      ]
-    });
-    await actionSheet.present();
+  async ngOnInit() {
+    try {
+      const userData = await this.storage.obtenerStorage();
+      if (userData && userData.token) {
+        this.token = userData.token;
+        this.idUsuario = userData.idUsuario;
+      }
+    } catch (error) {
+      console.error('Error al obtener datos del storage:', error);
+    }
   }
 
   async takePicture() {
@@ -64,15 +46,20 @@ export class AgregarVehiculoPage implements OnInit {
       const image = await Camera.getPhoto({
         quality: 90,
         allowEditing: true,
-        resultType: CameraResultType.Base64,
+        resultType: CameraResultType.DataUrl,
         source: CameraSource.Camera
       });
 
-      const imageBlob = this.dataURItoBlob('data:image/jpeg;base64,' + image.base64String);
-      this.archivoImagen = new File([imageBlob], "vehiculo.jpg", { type: 'image/jpeg' });
+      this.previewImage = image.dataUrl;
+      
+      // Convertir a File
+      const response = await fetch(image.dataUrl!);
+      const blob = await response.blob();
+      this.archivoImagen = new File([blob], 'vehiculo.jpg', { type: 'image/jpeg' });
       
     } catch (error) {
       console.error('Error al tomar la foto:', error);
+      this.mostrarMensaje('Error', 'No se pudo tomar la foto');
     }
   }
 
@@ -81,34 +68,33 @@ export class AgregarVehiculoPage implements OnInit {
       const image = await Camera.getPhoto({
         quality: 90,
         allowEditing: true,
-        resultType: CameraResultType.Base64,
+        resultType: CameraResultType.DataUrl,
         source: CameraSource.Photos
       });
 
-      const imageBlob = this.dataURItoBlob('data:image/jpeg;base64,' + image.base64String);
-      this.archivoImagen = new File([imageBlob], "vehiculo.jpg", { type: 'image/jpeg' });
+      this.previewImage = image.dataUrl;
+      
+      // Convertir a File
+      const response = await fetch(image.dataUrl!);
+      const blob = await response.blob();
+      this.archivoImagen = new File([blob], 'vehiculo.jpg', { type: 'image/jpeg' });
       
     } catch (error) {
-      console.error('Error al seleccionar la foto:', error);
+      console.error('Error al seleccionar la imagen:', error);
+      this.mostrarMensaje('Error', 'No se pudo seleccionar la imagen');
     }
-  }
-
-  private dataURItoBlob(dataURI: string) {
-    const byteString = window.atob(dataURI.split(',')[1]);
-    const arrayBuffer = new ArrayBuffer(byteString.length);
-    const int8Array = new Uint8Array(arrayBuffer);
-    for (let i = 0; i < byteString.length; i++) {
-      int8Array[i] = byteString.charCodeAt(i);
-    }
-    const blob = new Blob([int8Array], { type: 'image/jpeg' });
-    return blob;
   }
 
   async agregarVehiculo() {
     if (!this.validarFormulario()) {
       return;
     }
-  
+
+    if (!this.archivoImagen) {
+      await this.mostrarMensaje('Error', 'Debe seleccionar una imagen del vehículo');
+      return;
+    }
+
     try {
       const vehiculoData = {
         p_id_usuario: this.idUsuario,
@@ -120,13 +106,11 @@ export class AgregarVehiculoPage implements OnInit {
         p_tipo_combustible: this.tipoCombustible,
         token: this.token
       };
-  
-      if (!this.archivoImagen) {
-        await this.mostrarMensaje('Error', 'Debe seleccionar una imagen del vehículo');
-        return;
-      }
-  
+
+      console.log('Enviando datos:', vehiculoData);
       const response = await this.apiService.agregarVehiculo(vehiculoData, this.archivoImagen);
+      console.log('Respuesta:', response);
+      
       await this.mostrarMensaje('Éxito', 'Vehículo registrado correctamente');
       this.router.navigate(['/principal']);
     } catch (error) {
