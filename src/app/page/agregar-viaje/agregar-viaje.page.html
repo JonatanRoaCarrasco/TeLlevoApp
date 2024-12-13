@@ -1,0 +1,109 @@
+
+<ion-menu content-id="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>TeLlevoApp</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <ion-item routerLink="/login">INICIAR SESIÓN</ion-item>
+      <ion-item routerLink="/crear-user">CREAR CUENTA</ion-item>
+      <ion-item routerLink="/recuperar-pass">Recuperar contraseña</ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<div class="page-container">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/principal"></ion-back-button>
+      </ion-buttons>
+
+      <img src="/assets/img/duoc.png" class="responsive-image" alt="Logo Duoc"/>
+
+      <ion-buttons slot="end">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content id="main-content" class="ion-padding">
+    <div class="content-container">
+      <h1 class="ion-text-center">Agregar Viaje</h1>
+      
+      <form class="form-container" #viajeForm="ngForm">
+        <ion-item>
+          <ion-label position="floating">Ubicación de Origen</ion-label>
+          <ion-input [(ngModel)]="p_ubicacion_origen" name="ubicacionOrigen" type="text" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Ubicación de Destino</ion-label>
+          <ion-input [(ngModel)]="p_ubicacion_destino" name="ubicacionDestino" type="text" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Costo</ion-label>
+          <ion-input [(ngModel)]="p_costo" name="costo" type="number" required min="0"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">ID de Vehículo</ion-label>
+          <ion-input [(ngModel)]="p_id_vehiculo" name="idVehiculo" type="number" required></ion-input>
+        </ion-item>
+
+        <div class="ion-text-center ion-padding-top">
+          <ion-button (click)="registrarViaje()" [disabled]="viajeForm.invalid" expand="block">
+            <ion-icon slot="start" name="car"></ion-icon>
+            Registrar Viaje
+          </ion-button>
+        </div>
+      </form>
+    </div>
+  </ion-content>
+
+  <ion-footer class="footer">
+    <ion-toolbar>
+      <ion-title class="ion-text-center">Desarrollado por Jon.Roa</ion-title>
+    </ion-toolbar>
+  </ion-footer>
+</div>
+
+<style>
+  .page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .content-container {
+    flex: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .responsive-image {
+    max-width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+  }
+
+  ion-item {
+    margin-bottom: 16px;
+  }
+
+  .form-container {
+    margin-bottom: 30px;
+  }
+
+  h1 {
+    margin-bottom: 24px;
+    color: var(--ion-color-primary);
+  }
+</style>

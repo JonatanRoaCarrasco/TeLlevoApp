@@ -45,9 +45,15 @@ const routes: Routes = [
     loadChildren: () => import('./page/lista-vehiculos/lista-vehiculos.module').then( m => m.ListaVehiculosPageModule)
   },
   {
+    path: 'agregar-viaje',
+    loadChildren: () => import('./page/agregar-viaje/agregar-viaje.module').then( m => m.AgregarViajePageModule)
+  },
+  {
     path:'**',
     component: PageNotFoundComponent
-  }
+  },
+  
+
 ];
 
 @NgModule({
