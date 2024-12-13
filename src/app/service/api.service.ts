@@ -47,16 +47,19 @@ export class ApiService {
 
   async obtenerVehiculo(data?: { p_id: number; token: string }): Promise<any> {
     try {
-      const params = {
-        p_id: data?.p_id || '',
-        token: data?.token || ''
-      };
+      const params = new URLSearchParams();
+      if (data?.p_id) params.append('p_id', data.p_id.toString());
+      if (data?.token) params.append('token', data.token);
+  
+      const url = `${this.apiURL}vehiculo/obtener?${params.toString()}`;
+      console.log('URL de la petición:', url);
+  
       const response = await lastValueFrom(
-        this.http.get<any>(`${this.apiURL}vehiculo/obtener`, { params })
+        this.http.get<any>(url)
       );
       return response;
     } catch (error) {
-      console.error('Error en obtenerVehiculo:', error);
+      console.error('Error detallado en obtenerVehiculo:', error);
       throw error;
     }
   }
