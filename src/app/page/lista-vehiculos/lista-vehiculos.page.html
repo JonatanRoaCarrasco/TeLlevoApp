@@ -7,11 +7,30 @@
 
   <ion-content>
     <ion-list>
-      <ion-item routerLink="/login">INICIAR SESION</ion-item>
-      <ion-item routerLink="/crear-user">CREAR CUENTA</ion-item>
-      <ion-item routerLink="/recuperar-pass">Recuperar contraseña</ion-item>
-      <ion-item routerLink="/agregar-vehiculo">AGREGAR VEHICULO</ion-item>
-      <ion-item routerLink="/lista-vehiculos">MIS VEHICULOS</ion-item>
+      <ion-item routerLink="/principal">
+        <ion-icon name="home" slot="start"></ion-icon>
+        INICIO
+      </ion-item>
+      <ion-item routerLink="/login">
+        <ion-icon name="log-in" slot="start"></ion-icon>
+        INICIAR SESION
+      </ion-item>
+      <ion-item routerLink="/crear-user">
+        <ion-icon name="person-add" slot="start"></ion-icon>
+        CREAR CUENTA
+      </ion-item>
+      <ion-item routerLink="/recuperar-pass">
+        <ion-icon name="key" slot="start"></ion-icon>
+        Recuperar contraseña
+      </ion-item>
+      <ion-item routerLink="/agregar-vehiculo">
+        <ion-icon name="car" slot="start"></ion-icon>
+        AGREGAR VEHICULO
+      </ion-item>
+      <ion-item routerLink="/lista-vehiculos">
+        <ion-icon name="list" slot="start"></ion-icon>
+        MIS VEHICULOS
+      </ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>
@@ -32,47 +51,70 @@
   </ion-header>
 
   <ion-content id="main-content" class="ion-padding">
-    <div class="content-container">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content
+        pullingIcon="chevron-down-circle-outline"
+        pullingText="Desliza para actualizar"
+        refreshingSpinner="circles"
+        refreshingText="Actualizando...">
+      </ion-refresher-content>
+    </ion-refresher>
+
+    <!-- Loading state -->
+    <div *ngIf="loading" class="loading-container ion-text-center">
+      <ion-spinner name="circles"></ion-spinner>
+      <p>Cargando vehículos...</p>
+    </div>
+
+    <!-- Error state -->
+    <ion-item *ngIf="error" color="danger" lines="none" class="error-message">
+      <ion-icon name="alert-circle" slot="start"></ion-icon>
+      <ion-label>{{ error }}</ion-label>
+    </ion-item>
+
+    <div class="content-container" *ngIf="!loading">
       <h1 class="ion-text-center">Mis Vehículos</h1>
 
-      <ion-refresher slot="fixed" (ionRefresh)="cargarVehiculos($event)">
-        <ion-refresher-content></ion-refresher-content>
-      </ion-refresher>
-
-      <div *ngIf="vehiculos.length === 0" class="ion-text-center ion-padding">
-        <p>No tienes vehículos registrados</p>
-        <ion-button routerLink="/agregar-vehiculo">
+      <!-- Empty state -->
+      <div *ngIf="vehiculos.length === 0" class="empty-state ion-text-center ion-padding">
+        <ion-icon name="car-outline" class="empty-icon"></ion-icon>
+        <h2>No tienes vehículos registrados</h2>
+        <p>Comienza agregando tu primer vehículo</p>
+        <ion-button routerLink="/agregar-vehiculo" expand="block" class="ion-margin-top">
           <ion-icon slot="start" name="add"></ion-icon>
           Agregar Vehículo
         </ion-button>
       </div>
 
-      <ion-grid>
+      <!-- Vehicle grid -->
+      <ion-grid *ngIf="vehiculos.length > 0">
         <ion-row>
-          <ion-col size="12" size-md="6" *ngFor="let vehiculo of vehiculos">
-            <ion-card>
-              <img 
-                [src]="getImageUrl(vehiculo)" 
-                (error)="handleImageError($event)"
-                [alt]="vehiculo.marca + ' ' + vehiculo.modelo"
-                class="vehicle-image"
-              />
+          <ion-col size="12" size-md="6" size-lg="4" *ngFor="let vehiculo of vehiculos">
+            <ion-card class="vehicle-card">
+              <div class="image-container">
+                <img 
+                  [src]="vehiculo.url_imagen"
+                  (error)="handleImageError($event)"
+                  [alt]="vehiculo.marca + ' ' + vehiculo.modelo"
+                  class="vehicle-image"
+                />
+              </div>
               <ion-card-header>
-                <ion-card-subtitle>{{vehiculo.marca}} {{vehiculo.modelo}}</ion-card-subtitle>
-                <ion-card-title>{{vehiculo.patente}}</ion-card-title>
+                <ion-card-subtitle class="ion-text-uppercase">{{vehiculo.marca}} {{vehiculo.modelo}}</ion-card-subtitle>
+                <ion-card-title class="patente-text">{{vehiculo.patente}}</ion-card-title>
               </ion-card-header>
               <ion-card-content>
                 <ion-list lines="none">
                   <ion-item>
-                    <ion-icon name="calendar" slot="start"></ion-icon>
+                    <ion-icon name="calendar-outline" slot="start" color="primary"></ion-icon>
                     <ion-label>Año: {{vehiculo.anio}}</ion-label>
                   </ion-item>
                   <ion-item>
-                    <ion-icon name="color-palette" slot="start"></ion-icon>
+                    <ion-icon name="color-palette-outline" slot="start" color="primary"></ion-icon>
                     <ion-label>Color: {{vehiculo.color}}</ion-label>
                   </ion-item>
                   <ion-item>
-                    <ion-icon name="car" slot="start"></ion-icon>
+                    <ion-icon name="speedometer-outline" slot="start" color="primary"></ion-icon>
                     <ion-label>Combustible: {{vehiculo.tipo_combustible}}</ion-label>
                   </ion-item>
                 </ion-list>
@@ -83,7 +125,7 @@
       </ion-grid>
 
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button routerLink="/agregar-vehiculo">
+        <ion-fab-button (click)="irAgregarVehiculo()" color="primary">
           <ion-icon name="add"></ion-icon>
         </ion-fab-button>
       </ion-fab>
@@ -119,19 +161,54 @@
     padding: 10px;
   }
 
-  ion-card {
+  .loading-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .empty-state .empty-icon {
+    font-size: 64px;
+    color: var(--ion-color-medium);
+  }
+
+  .vehicle-card {
     margin-bottom: 16px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .image-container {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
   }
 
   .vehicle-image {
     width: 100%;
-    height: 200px;
+    height: 100%;
     object-fit: cover;
     object-position: center;
+    transition: transform 0.3s ease;
   }
 
-  h1 {
-    margin-bottom: 24px;
+  .vehicle-card:hover .vehicle-image {
+    transform: scale(1.05);
+  }
+
+  .patente-text {
+    font-size: 1.5rem;
+    font-weight: bold;
     color: var(--ion-color-primary);
   }
 
@@ -144,8 +221,9 @@
     margin-right: 20px;
   }
 
-  ion-card-subtitle {
-    text-transform: uppercase;
+  .error-message {
+    margin: 1rem;
+    border-radius: 8px;
   }
 
   ion-list {
@@ -154,5 +232,17 @@
 
   ion-item {
     --background: transparent;
+  }
+
+  h1 {
+    margin-bottom: 24px;
+    color: var(--ion-color-primary);
+    font-weight: bold;
+  }
+
+  @media (max-width: 768px) {
+    .content-container {
+      padding: 10px;
+    }
   }
 </style>

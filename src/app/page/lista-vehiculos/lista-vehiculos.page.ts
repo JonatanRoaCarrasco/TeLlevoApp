@@ -5,17 +5,35 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { environment } from 'src/environments/environment';
 
+interface UserData {
+  token: string;
+  email: string;
+  idUsuario?: number;
+}
+
+interface Vehiculo {
+  id_vehiculo: number;
+  patente: string;
+  marca: string;
+  modelo: string;
+  anio: number;
+  color: string;
+  tipo_combustible: string;
+  url_imagen: string;
+}
+
 @Component({
   selector: 'app-lista-vehiculos',
   templateUrl: './lista-vehiculos.page.html',
   styleUrls: ['./lista-vehiculos.page.scss'],
 })
 export class ListaVehiculosPage implements OnInit {
-  vehiculos: any[] = [];
+  vehiculos: Vehiculo[] = [];
   token: string = '';
   idUsuario: number = 0;
   email: string = '';
-  apiUrl = environment.apiUrl;
+  loading: boolean = true;
+  error: string | null = null;
 
   constructor(
     private apiService: ApiService,
@@ -24,103 +42,108 @@ export class ListaVehiculosPage implements OnInit {
     private alertController: AlertController
   ) {}
 
-  async ngOnInit() {
-    await this.inicializarDatos();
+  async ngOnInit(): Promise<void> {
+    try {
+      this.loading = true;
+      await this.inicializarDatos();
+    } catch (error) {
+      console.error('Error en ngOnInit:', error);
+    } finally {
+      this.loading = false;
+    }
   }
 
-  async inicializarDatos() {
+  async inicializarDatos(): Promise<void> {
     try {
       const userData = await this.storage.obtenerStorage();
       console.log('Datos del storage:', userData);
       
       if (!userData) {
-        await this.mostrarAlerta('Error', 'No hay sesión activa');
-        this.router.navigate(['/login']);
-        return;
+        throw new Error('No hay sesión activa');
       }
 
-      const userInfo = Array.isArray(userData) ? userData[0] : userData;
+      const userInfo: UserData = Array.isArray(userData) ? userData[0] : userData;
       this.token = userInfo.token;
       this.email = userInfo.email;
+
+      if (!this.token || !this.email) {
+        throw new Error('Datos de sesión incompletos');
+      }
 
       const userResponse = await this.apiService.obtenerUsuario({
         p_correo: this.email,
         token: this.token
       });
 
-      if (userResponse?.data?.[0]) {
-        this.idUsuario = userResponse.data[0].id_usuario;
-        console.log('ID Usuario obtenido:', this.idUsuario);
-        await this.cargarVehiculos();
-      } else {
+      if (!userResponse?.data?.[0]?.id_usuario) {
         throw new Error('No se pudo obtener el ID del usuario');
       }
 
+      this.idUsuario = userResponse.data[0].id_usuario;
+      console.log('ID Usuario obtenido:', this.idUsuario);
+      
+      await this.cargarVehiculos();
+
     } catch (error) {
       console.error('Error al inicializar datos:', error);
-      await this.mostrarAlerta('Error', 'Error al cargar los datos');
+      const mensaje = error instanceof Error ? error.message : 'Error al cargar los datos';
+      await this.mostrarAlerta('Error', mensaje);
+      this.router.navigate(['/login']);
     }
   }
 
-  async cargarVehiculos(event?: any) {
+  async cargarVehiculos(event?: any): Promise<void> {
     try {
-      console.log('Intentando cargar vehículos con:', {
-        p_id: this.idUsuario,
-        token: this.token
-      });
+      if (!this.idUsuario || !this.token) {
+        throw new Error('Faltan datos necesarios para cargar vehículos');
+      }
 
       const response = await this.apiService.obtenerVehiculo({
         p_id: this.idUsuario,
         token: this.token
       });
 
-      // Añade este log
-      console.log('Respuesta completa del servidor:', JSON.stringify(response, null, 2));
+      console.log('Respuesta completa del servidor:', response);
 
-      if (response?.data) {
-        this.vehiculos = response.data;
-        // También añade este log para ver la estructura de cada vehículo
-        this.vehiculos.forEach(vehiculo => {
-          console.log('Datos de vehículo:', vehiculo);
-        });
+      if (!response?.data) {
+        throw new Error('No se recibieron datos de vehículos');
       }
+
+      this.vehiculos = response.data;
+      
+      this.vehiculos.forEach((vehiculo, index) => {
+        console.log(`Vehículo ${index + 1}:`, {
+          id: vehiculo.id_vehiculo,
+          patente: vehiculo.patente,
+          marca: vehiculo.marca,
+          url_imagen: vehiculo.url_imagen
+        });
+      });
+
     } catch (error) {
       console.error('Error al cargar vehículos:', error);
-      await this.mostrarAlerta('Error', 'No se pudieron cargar los vehículos');
+      this.error = error instanceof Error ? error.message : 'Error al cargar vehículos';
+      await this.mostrarAlerta('Error', this.error);
     } finally {
       if (event) {
         event.target.complete();
       }
     }
-}
+  }
 
-  getImageUrl(vehiculo: any): string {
+  getImageUrl(vehiculo: Vehiculo): string {
     if (!vehiculo.url_imagen) {
-      return 'assets/img/default-car.png';
+      console.warn('Vehículo sin imagen:', vehiculo.patente);
+      return '';
     }
-
-    // Si la URL ya es completa (comienza con http o https)
-    if (vehiculo.url_imagen.startsWith('http')) {
-      return vehiculo.url_imagen;
-    }
-
-    // Si la URL es relativa, construir la URL completa
-    // Asegurarse de que no haya dobles slashes
-    const baseUrl = this.apiUrl.endsWith('/') ? this.apiUrl.slice(0, -1) : this.apiUrl;
-    const imagePath = vehiculo.url_imagen.startsWith('/') ? vehiculo.url_imagen : '/' + vehiculo.url_imagen;
-    
-    const fullUrl = baseUrl + imagePath;
-    console.log('URL construida para imagen:', fullUrl);
-    return fullUrl;
+    return vehiculo.url_imagen;
   }
 
-  handleImageError(event: any) {
-    console.log('URL de imagen que falló:', event.target.src);
-    // Quitamos el slash inicial de la ruta
-    event.target.src = 'assets/img/car-placeholder.jpg';
+  handleImageError(event: any): void {
+    console.error('Error al cargar imagen:', (event.target as HTMLImageElement).src);
   }
 
-  private async mostrarAlerta(header: string, message: string) {
+  private async mostrarAlerta(header: string, message: string): Promise<void> {
     const alert = await this.alertController.create({
       header,
       message,
@@ -129,11 +152,12 @@ export class ListaVehiculosPage implements OnInit {
     await alert.present();
   }
 
-  async doRefresh(event: any) {
+  async doRefresh(event: any): Promise<void> {
+    this.error = null;
     await this.cargarVehiculos(event);
   }
 
-  irAgregarVehiculo() {
+  irAgregarVehiculo(): void {
     this.router.navigate(['/agregar-vehiculo']);
   }
 }

@@ -51,7 +51,11 @@ const routes: Routes = [
   {
     path:'**',
     component: PageNotFoundComponent
+  },  {
+    path: 'lista-viajes',
+    loadChildren: () => import('./page/lista-viajes/lista-viajes.module').then( m => m.ListaViajesPageModule)
   },
+
   
 
 ];
