@@ -52,7 +52,7 @@
           <ion-col size="12" size-md="6" *ngFor="let vehiculo of vehiculos">
             <ion-card>
               <img 
-                [src]="vehiculo.url_imagen || '/assets/img/default-car.png'" 
+                [src]="getImageUrl(vehiculo)" 
                 (error)="handleImageError($event)"
                 [alt]="vehiculo.marca + ' ' + vehiculo.modelo"
                 class="vehicle-image"

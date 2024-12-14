@@ -3,6 +3,7 @@ import { ApiService } from 'src/app/service/api.service';
 import { SotorageService } from 'src/app/service/sotorage.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-lista-vehiculos',
@@ -14,6 +15,7 @@ export class ListaVehiculosPage implements OnInit {
   token: string = '';
   idUsuario: number = 0;
   email: string = '';
+  apiUrl = environment.apiUrl;
 
   constructor(
     private apiService: ApiService,
@@ -41,7 +43,6 @@ export class ListaVehiculosPage implements OnInit {
       this.token = userInfo.token;
       this.email = userInfo.email;
 
-      // Primero obtener el ID de usuario usando el email
       const userResponse = await this.apiService.obtenerUsuario({
         p_correo: this.email,
         token: this.token
@@ -73,11 +74,15 @@ export class ListaVehiculosPage implements OnInit {
         token: this.token
       });
 
-      console.log('Respuesta del servidor:', response);
+      // Añade este log
+      console.log('Respuesta completa del servidor:', JSON.stringify(response, null, 2));
 
       if (response?.data) {
         this.vehiculos = response.data;
-        console.log('URLs de las imágenes:', this.vehiculos.map(v => v.url_imagen));
+        // También añade este log para ver la estructura de cada vehículo
+        this.vehiculos.forEach(vehiculo => {
+          console.log('Datos de vehículo:', vehiculo);
+        });
       }
     } catch (error) {
       console.error('Error al cargar vehículos:', error);
@@ -87,12 +92,32 @@ export class ListaVehiculosPage implements OnInit {
         event.target.complete();
       }
     }
+}
+
+  getImageUrl(vehiculo: any): string {
+    if (!vehiculo.url_imagen) {
+      return 'assets/img/default-car.png';
+    }
+
+    // Si la URL ya es completa (comienza con http o https)
+    if (vehiculo.url_imagen.startsWith('http')) {
+      return vehiculo.url_imagen;
+    }
+
+    // Si la URL es relativa, construir la URL completa
+    // Asegurarse de que no haya dobles slashes
+    const baseUrl = this.apiUrl.endsWith('/') ? this.apiUrl.slice(0, -1) : this.apiUrl;
+    const imagePath = vehiculo.url_imagen.startsWith('/') ? vehiculo.url_imagen : '/' + vehiculo.url_imagen;
+    
+    const fullUrl = baseUrl + imagePath;
+    console.log('URL construida para imagen:', fullUrl);
+    return fullUrl;
   }
 
-  // Método para manejar errores de carga de imágenes
   handleImageError(event: any) {
-    console.log('Error al cargar imagen, usando imagen por defecto');
-    event.target.src = '/assets/img/default-car.png';
+    console.log('URL de imagen que falló:', event.target.src);
+    // Quitamos el slash inicial de la ruta
+    event.target.src = 'assets/img/car-placeholder.jpg';
   }
 
   private async mostrarAlerta(header: string, message: string) {
@@ -104,12 +129,10 @@ export class ListaVehiculosPage implements OnInit {
     await alert.present();
   }
 
-  // Método para refrescar la lista manualmente
   async doRefresh(event: any) {
     await this.cargarVehiculos(event);
   }
 
-  // Método para navegar a agregar vehículo
   irAgregarVehiculo() {
     this.router.navigate(['/agregar-vehiculo']);
   }
