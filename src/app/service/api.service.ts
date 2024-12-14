@@ -10,7 +10,6 @@ import { environment } from 'src/environments/environment';
 export class ApiService {
   private apiURL = environment.apiUrl || 'https://uber-nodejs-server-git-d61f89-guillermovillacuratorres-projects.vercel.app/api/';
 
-
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -41,6 +40,25 @@ export class ApiService {
       return response;
     } catch (error) {
       console.error('Error en agregarViaje:', error);
+      throw error;
+    }
+  }
+
+  async obtenerViaje(data: { p_id_usuario?: number; token: string }): Promise<any> {
+    try {
+      const params = new URLSearchParams();
+      if (data.p_id_usuario) params.append('p_id_usuario', data.p_id_usuario.toString());
+      if (data.token) params.append('token', data.token);
+
+      const url = `${this.apiURL}viaje/obtener?${params.toString()}`;
+      console.log('URL de la petición de viaje:', url);
+
+      const response = await lastValueFrom(
+        this.http.get<any>(url)
+      );
+      return response;
+    } catch (error) {
+      console.error('Error en obtenerViaje:', error);
       throw error;
     }
   }
@@ -153,5 +171,10 @@ interface bodyVehiculo {
   p_anio: number;
   p_color: string;
   p_tipo_combustible: string;
+  token: string;
+}
+
+interface getViajeParams {
+  p_id_usuario?: number;
   token: string;
 }

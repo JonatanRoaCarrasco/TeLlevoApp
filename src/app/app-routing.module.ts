@@ -49,13 +49,15 @@ const routes: Routes = [
     loadChildren: () => import('./page/agregar-viaje/agregar-viaje.module').then( m => m.AgregarViajePageModule)
   },
   {
-    path:'**',
-    component: PageNotFoundComponent
-  },  {
     path: 'lista-viajes',
     loadChildren: () => import('./page/lista-viajes/lista-viajes.module').then( m => m.ListaViajesPageModule)
   },
 
+  {
+    path:'**',
+    component: PageNotFoundComponent
+  },
+  
   
 
 ];
