@@ -1,0 +1,179 @@
+
+
+.header-logo {
+    max-height: 40px;  /* Ajusta este valor según el tamaño que necesites */
+    width: auto;
+    vertical-align: middle;
+  }
+  
+  .carousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0;
+  }
+  
+  .logo-container {
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .app-logo {
+    max-width: 200px;
+    height: auto;
+  }
+  
+  .custom-card {
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .custom-icon {
+    font-size: 64px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  
+  ion-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 10px;
+  }
+  
+  h2 {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  
+  
+  
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+  
+  .app-logo {
+    max-width: 200px;
+    height: auto;
+    animation: fadeIn 1.5s ease-in-out;
+  }
+  
+  .buttons-container {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  .buttons-container ion-button {
+    margin: 8px 0;
+  }
+  
+  ion-tab-button {
+    --color-selected: var(--ion-color-light);
+  }
+  
+  .carousel {
+    display: inline-block; /* Para que el texto se ajuste al ancho del contenido */
+    white-space: nowrap; /* Evita que el texto se ajuste a múltiples líneas */
+    overflow: hidden; /* Oculta el texto fuera del contenedor */
+    position: relative; /* Posiciona el contenido relativo al carrusel */
+  }
+  
+  .carousel span {
+    display: inline-block;
+    animation: scroll 5s linear infinite; /* Duración y tipo de animación */
+  }
+  
+  @keyframes scroll {
+    0% {
+      transform: translateX(100%); /* Comienza fuera del lado derecho */
+    }
+    100% {
+      transform: translateX(-100%); /* Termina fuera del lado izquierdo */
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .custom-card {
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .custom-icon {
+    font-size: 64px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  
+  ion-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 10px;
+  }
+  
+  h2 {
+    margin: 0;
+    font-size: 16px;
+  }
+  .page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .header-logo {
+    max-height: 40px;
+    margin: 0 auto;
+  }
+
+  .logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .app-logo {
+    max-width: 200px;
+    height: auto;
+  }
+
+  .custom-card {
+    margin: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .custom-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .custom-icon {
+    font-size: 2em;
+    margin-bottom: 8px;
+  }
+
+  ion-content {
+    --padding-top: 20px;
+    --padding-bottom: 20px;
+  }

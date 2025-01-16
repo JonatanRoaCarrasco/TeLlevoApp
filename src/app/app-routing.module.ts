@@ -5,10 +5,7 @@ import { PageNotFoundComponent } from './Component/page-not-found/page-not-found
 const redireccionarLogin = () => redirectUnauthorizedTo(['/login']);
 
 const routes: Routes = [
-  {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
-  },
+  
   {
     path: '',
     redirectTo: 'login',

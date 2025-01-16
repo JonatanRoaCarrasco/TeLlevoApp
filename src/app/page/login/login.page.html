@@ -1,108 +1,57 @@
-<ion-app>
-  <ion-menu content-id="main-content">
-    <ion-header>
-      <ion-toolbar color="primary">
-        <ion-title>TeLlevoApp</ion-title>
-      </ion-toolbar>
-    </ion-header>
-  
-    <ion-content>
-      <ion-list>
-        <ion-item routerLink="/login">INICIAR SESION</ion-item>
-        <ion-item routerLink="/crear-user">CREAR CUENTA</ion-item>
-        <ion-item routerLink="/recuperar-pass">RECUPERAR CONTRASEÑA</ion-item>
-        <ion-item routerLink="/agregar-vehiculo">AGREGAR VEHICULO</ion-item>
-        <ion-item routerLink="/agregar-viaje">AGREGAR VIAJE</ion-item>
-        <ion-item routerLink="/lista-vehiculos">VEHICULOS</ion-item>
-        <ion-item routerLink="/lista-viajes">VIAJES</ion-item>
-  
-  
-      </ion-list>
-    </ion-content>
-  </ion-menu>
-
-  <div class="page-container">
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-back-button defaultHref="/"></ion-back-button>
-        </ion-buttons>
-        <img src="/assets/img/duoc.png" class="responsive-image" alt="Logo Duoc"/>
-        <ion-buttons slot="end">
-          <ion-menu-button></ion-menu-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
- 
-    <ion-content id="main-content" class="ion-padding">
-      <div class="content-container">
-        <h1 class="ion-text-center">Ingresar</h1>
- 
-        <form class="form-container">
-          <ion-item>
-            <ion-label position="floating">Ingrese su correo</ion-label>
-            <ion-input [(ngModel)]="email" name="email" type="email" placeholder="email@domain.com"></ion-input>
-          </ion-item>
- 
-          <ion-item>
-            <ion-label position="floating">Ingrese su contraseña</ion-label>
-            <ion-input [(ngModel)]="passWord" name="password" type="password" placeholder="******"></ion-input>
-          </ion-item>
- 
-          <div class="ion-text-center ion-padding-top">
-            <ion-button (click)="login()">Ingresar</ion-button>
-          </div>
-        </form>
- 
-        
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar color="primary" class="ion-text-center">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <div class="carousel">
+        <span>
+          <img src="assets/img/TIPO.png" alt="TIPO" class="header-logo">
+        </span>
       </div>
-    </ion-content>
- 
-    <ion-footer class="footer">
-      <ion-toolbar>
-        <ion-title class="ion-text-center">Desarrollado por Jon.Roa</ion-title>
-      </ion-toolbar>
-    </ion-footer>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content id="main-content" class="ion-padding">
+  <div class="content-container">
+    <h1 class="ion-text-center">Ingresar</h1>
+
+    <form class="form-container">
+      <ion-item>
+        <ion-label position="floating">Ingrese su correo</ion-label>
+        <ion-input [(ngModel)]="email" name="email" type="email" placeholder="email@domain.com"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Ingrese su contraseña</ion-label>
+        <ion-input [(ngModel)]="passWord" name="password" type="password" placeholder="******"></ion-input>
+      </ion-item>
+    </form>
+
+    <div class="ion-padding">
+      <ion-button expand="block" color="primary" type="submit" (click)="login()">
+        <ion-icon name="log-in-outline" slot="start"></ion-icon>
+        Ingresar
+      </ion-button>
+
+      <ion-button expand="block" color="secondary" fill="outline" routerLink="/crear-user">
+        <ion-icon name="person-add-outline" slot="start"></ion-icon>
+        Registrarse
+      </ion-button>
+    </div>
+
+    <ion-text color="primary" class="ion-text-center">
+      <a routerLink="/recuperar-pass" style="text-decoration: none; color: inherit;">
+        <p>¿Olvidaste tu contraseña?</p>
+      </a>
+    </ion-text>
   </div>
- </ion-app>
- 
- <style>
-  .page-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
- 
-  .content-container {
-    flex: 1;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-  }
- 
-  .responsive-image {
-    max-width: 150px;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-    padding: 10px;
-  }
- 
-  ion-item {
-    margin-bottom: 16px;
-  }
- 
-  .form-container {
-    margin-bottom: 30px;
-  }
- 
-  h1 {
-    margin-bottom: 24px;
-    color: var(--ion-color-primary);
-  }
- 
-  a {
-    color: var(--ion-color-primary);
-    text-decoration: none;
-  }
- </style>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-center">JonatanRoa</ion-title>
+  </ion-toolbar>
+</ion-footer>
+

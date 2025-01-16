@@ -1,0 +1,90 @@
+ion-footer {
+  flex-shrink: 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+
+.header-logo {
+    max-height: 40px;  /* Ajusta este valor según el tamaño que necesites */
+    width: auto;
+    vertical-align: middle;
+  }
+  
+  .carousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0;
+  }
+
+  .carousel {
+    display: inline-block; /* Para que el texto se ajuste al ancho del contenido */
+    white-space: nowrap; /* Evita que el texto se ajuste a múltiples líneas */
+    overflow: hidden; /* Oculta el texto fuera del contenedor */
+    position: relative; /* Posiciona el contenido relativo al carrusel */
+  }
+  
+  .carousel span {
+    display: inline-block;
+    animation: scroll 5s linear infinite; /* Duración y tipo de animación */
+  }
+  
+  @keyframes scroll {
+    0% {
+      transform: translateX(100%); /* Comienza fuera del lado derecho */
+    }
+    100% {
+      transform: translateX(-100%); /* Termina fuera del lado izquierdo */
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+ 
+  .content-container {
+    flex: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+ 
+  .responsive-image {
+    max-width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+  }
+ 
+  
+ 
+  .form-container {
+    margin-bottom: 30px;
+  }
+ 
+  h1 {
+    margin-bottom: 24px;
+    color: var(--ion-color-primary);
+  }
+ 
+  a {
+    color: var(--ion-color-primary);
+    text-decoration: none;
+  }

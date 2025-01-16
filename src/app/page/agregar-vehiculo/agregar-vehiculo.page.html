@@ -1,41 +1,23 @@
-<ion-menu content-id="main-content">
-  <ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>TeLlevoApp</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar color="primary" class="ion-text-center">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    
+    <ion-title>
+      <div class="carousel">
+        <span>
+          <img src="assets/img/TIPO.png" alt="TIPO" class="header-logo">
+          
+        </span>
+      </div>
+    </ion-title>
 
-  <ion-content>
-    <ion-list>
-      <ion-item routerLink="/login">INICIAR SESION</ion-item>
-      <ion-item routerLink="/crear-user">CREAR CUENTA</ion-item>
-      <ion-item routerLink="/recuperar-pass">RECUPERAR CONTRASEÑA</ion-item>
-      <ion-item routerLink="/agregar-vehiculo">AGREGAR VEHICULO</ion-item>
-      <ion-item routerLink="/agregar-viaje">AGREGAR VIAJE</ion-item>
-      <ion-item routerLink="/lista-vehiculos">VEHICULOS</ion-item>
-      <ion-item routerLink="/lista-viajes">VIAJES</ion-item>
-
-
-    </ion-list>
-  </ion-content>
-</ion-menu>
-
-<div class="page-container">
-  <!-- Encabezado -->
-  <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-back-button defaultHref="/principal"></ion-back-button>
-      </ion-buttons>
-
-      <!-- Logo de la aplicación -->
-      <img src="/assets/img/duoc.png" class="responsive-image" alt="Logo Duoc"/>
-
-      <ion-buttons slot="end">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
   <!-- Contenido principal -->
   <ion-content id="main-content" class="ion-padding">
@@ -107,58 +89,14 @@
     </div>
   </ion-content>
 
-  <!-- Pie de página -->
-  <ion-footer class="footer">
-    <ion-toolbar>
-      <ion-title class="ion-text-center">Desarrollado por Jon.Roa</ion-title>
-    </ion-toolbar>
-  </ion-footer>
-</div>
+ <!-- Pie de página -->
+ <ion-footer class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-center">
+      JonatanRoa
+    </ion-title>
+  </ion-toolbar>
+</ion-footer>
 
-<style>
-  .page-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
 
-  .content-container {
-    flex: 1;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-  }
 
-  .responsive-image {
-    max-width: 150px;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-    padding: 10px;
-  }
-
-  ion-item {
-    margin-bottom: 16px;
-  }
-
-  .form-container {
-    margin-bottom: 30px;
-  }
-
-  h1 {
-    margin-bottom: 24px;
-    color: var(--ion-color-primary);
-  }
-
-  .image-preview {
-    margin: 20px auto;
-    max-width: 300px;
-    text-align: center;
-  }
-  
-  .image-preview img {
-    max-width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  }
-</style>
