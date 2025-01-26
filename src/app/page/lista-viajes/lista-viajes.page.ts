@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/service/api.service';
 import { SotorageService } from 'src/app/service/sotorage.service';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 
 interface UserData {
   token: string;
@@ -24,6 +24,7 @@ interface Viaje {
     modelo: string;
     patente: string;
   };
+  pasajerosDisponibles?: number;
 }
 
 interface EstadosMap {
@@ -34,6 +35,7 @@ interface EstadosMap {
   selector: 'app-lista-viajes',
   templateUrl: './lista-viajes.page.html',
   styleUrls: ['./lista-viajes.page.scss'],
+  standalone: false,
 })
 export class ListaViajesPage implements OnInit {
   viajes: Viaje[] = [];
@@ -47,14 +49,15 @@ export class ListaViajesPage implements OnInit {
     1: 'Activo',
     2: 'En Curso',
     3: 'Completado',
-    4: 'Cancelado'
+    4: 'Cancelado',
   };
 
   constructor(
     private apiService: ApiService,
     private storage: SotorageService,
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private toastController: ToastController
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -71,8 +74,6 @@ export class ListaViajesPage implements OnInit {
   async inicializarDatos(): Promise<void> {
     try {
       const userData = await this.storage.obtenerStorage();
-      console.log('📦 Datos del storage:', userData);
-      
       if (!userData) {
         throw new Error('No hay sesión activa');
       }
@@ -87,7 +88,7 @@ export class ListaViajesPage implements OnInit {
 
       const userResponse = await this.apiService.obtenerUsuario({
         p_correo: this.email,
-        token: this.token
+        token: this.token,
       });
 
       if (!userResponse?.data?.[0]?.id_usuario) {
@@ -95,51 +96,70 @@ export class ListaViajesPage implements OnInit {
       }
 
       this.idUsuario = userResponse.data[0].id_usuario;
-      console.log('👤 ID Usuario obtenido:', this.idUsuario);
-      
       await this.cargarViajes();
-
     } catch (error) {
-      console.error('❌ Error al inicializar datos:', error);
       const mensaje = error instanceof Error ? error.message : 'Error al cargar los datos';
       await this.mostrarAlerta('Error', mensaje);
       this.router.navigate(['/login']);
     }
   }
 
+  doRefresh(event: any): void {
+    this.cargarViajes(event);
+  }
+
+  getEstadoColor(idEstado: number): string {
+    switch (idEstado) {
+      case 1: return 'success';
+      case 2: return 'warning';
+      case 3: return 'primary';
+      case 4: return 'danger';
+      default: return 'medium';
+    }
+  }
+
+  getEstadoViaje(idEstado: number): string {
+    return this.estados[idEstado] || 'Estado Desconocido';
+  }
+
+  formatearFecha(fecha: string): string {
+    return new Date(fecha).toLocaleDateString('es-CL', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  }
+
+  getIconoEstado(idEstado: number): string {
+    switch (idEstado) {
+      case 1: return 'checkmark-circle';
+      case 2: return 'play';
+      case 3: return 'trophy';
+      case 4: return 'close-circle';
+      default: return 'help-circle';
+    }
+  }
+
+  isEstadoActivo(idEstado: number): boolean {
+    return idEstado === 1;
+  }
+
   async cargarViajes(event?: any): Promise<void> {
     try {
-      if (!this.idUsuario || !this.token) {
-        throw new Error('Faltan datos necesarios para cargar viajes');
-      }
-
       const response = await this.apiService.obtenerViaje({
         p_id_usuario: this.idUsuario,
-        token: this.token
+        token: this.token,
       });
-
-      console.log('🚗 Respuesta del servidor:', response);
 
       if (!response?.data) {
         throw new Error('No se recibieron datos de viajes');
       }
 
-      this.viajes = response.data;
-      
-      this.viajes.forEach((viaje, index) => {
-        console.log(`📍 Viaje ${index + 1}:`, {
-          id: viaje.id_viaje,
-          origen: viaje.ubicacion_origen,
-          destino: viaje.ubicacion_destino,
-          costo: viaje.costo,
-          estado: this.getEstadoViaje(viaje.id_estado),
-          fecha: this.formatearFecha(viaje.fecha_registro),
-          vehiculo: viaje.vehiculo
-        });
-      });
-
+      this.viajes = (response.data as Viaje[]).map((viaje) => ({
+        ...viaje,
+        pasajerosDisponibles: 3,
+      }));
     } catch (error) {
-      console.error('❌ Error al cargar viajes:', error);
       this.error = error instanceof Error ? error.message : 'Error al cargar viajes';
       await this.mostrarAlerta('Error', this.error);
     } finally {
@@ -149,73 +169,23 @@ export class ListaViajesPage implements OnInit {
     }
   }
 
-  getEstadoViaje(idEstado: number): string {
-    const estados: EstadosMap = {
-      1: 'Activo',
-      2: 'En Curso',
-      3: 'Completado',
-      4: 'Cancelado'
-    };
-    return estados[idEstado] || 'Desconocido';
-  }
-
-  getEstadoColor(idEstado: number): string {
-    const colores: EstadosMap = {
-      1: 'success',
-      2: 'warning',
-      3: 'primary',
-      4: 'danger'
-    };
-    return colores[idEstado] || 'medium';
-  }
-
-  getIconoEstado(idEstado: number): string {
-    const iconos: EstadosMap = {
-      1: 'checkmark-circle',
-      2: 'time',
-      3: 'flag',
-      4: 'close-circle'
-    };
-    return iconos[idEstado] || 'help-circle';
-  }
-
-  isEstadoActivo(idEstado: number): boolean {
-    return idEstado === 1;
-  }
-
-  formatearFecha(fecha: string): string {
-    if (!fecha) return 'Fecha no disponible';
+  async solicitarViaje(viaje: Viaje): Promise<void> {
     try {
-      const fechaObj = new Date(fecha);
-      return fechaObj.toLocaleString('es-CL', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+      if (viaje.pasajerosDisponibles && viaje.pasajerosDisponibles > 0) {
+        const resultado = await this.apiService.solicitarViaje({
+          id_viaje: viaje.id_viaje,
+          id_usuario: this.idUsuario,
+          token: this.token,
+        });
+
+        viaje.pasajerosDisponibles--;
+        await this.mostrarNotificacion(`Viaje solicitado. Quedan ${viaje.pasajerosDisponibles} pasajeros disponibles.`);
+      } else {
+        await this.mostrarNotificacion('No hay pasajeros disponibles en este viaje.');
+      }
     } catch (error) {
-      console.error('Error al formatear fecha:', error);
-      return fecha;
+      await this.mostrarAlerta('Error', 'No se pudo solicitar el viaje');
     }
-  }
-
-  private async mostrarAlerta(header: string, message: string): Promise<void> {
-    const alert = await this.alertController.create({
-      header,
-      message,
-      buttons: ['OK']
-    });
-    await alert.present();
-  }
-
-  async doRefresh(event: any): Promise<void> {
-    this.error = null;
-    await this.cargarViajes(event);
-  }
-
-  irAgregarViaje(): void {
-    this.router.navigate(['/agregar-viaje']);
   }
 
   async cancelarViaje(idViaje: number): Promise<void> {
@@ -226,22 +196,53 @@ export class ListaViajesPage implements OnInit {
         buttons: [
           {
             text: 'No',
-            role: 'cancel'
+            role: 'cancel',
           },
           {
             text: 'Sí',
             handler: async () => {
-              // Aquí iría la lógica para cancelar el viaje
-              // Ejemplo: await this.apiService.actualizarEstadoViaje({ id: idViaje, estado: 4 });
-              await this.cargarViajes();
-            }
-          }
-        ]
+              try {
+                await this.apiService.actualizarEstadoViaje({
+                  id: idViaje,
+                  estado: 4,
+                  token: this.token,
+                });
+
+                await this.mostrarNotificacion('Viaje cancelado con éxito.');
+                await this.cargarViajes();
+              } catch (error) {
+                await this.mostrarAlerta('Error', 'No se pudo cancelar el viaje.');
+              }
+            },
+          },
+        ],
       });
       await alert.present();
     } catch (error) {
-      console.error('Error al cancelar viaje:', error);
-      await this.mostrarAlerta('Error', 'No se pudo cancelar el viaje');
+      await this.mostrarAlerta('Error', 'Error al mostrar el mensaje de confirmación.');
     }
+  }
+
+  async mostrarNotificacion(mensaje: string): Promise<void> {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 3000,
+      position: 'bottom',
+      color: 'success',
+    });
+    await toast.present();
+  }
+
+  private async mostrarAlerta(header: string, message: string): Promise<void> {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ['OK'],
+    });
+    await alert.present();
+  }
+
+  irAgregarViaje(): void {
+    this.router.navigate(['/agregar-viaje']);
   }
 }

@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { FirebaseService } from 'src/app/service/firebase.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { SotorageService } from 'src/app/service/sotorage.service';
 import { ApiService } from 'src/app/service/api.service';
-
 
 @Component({
   selector: 'app-login',
@@ -21,12 +20,19 @@ export class LoginPage implements OnInit {
     private router: Router, 
     private alertController: AlertController, 
     private storage: SotorageService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private loadingController: LoadingController
   ) { }
 
   ngOnInit() { }
 
   async login() {
+    const loading = await this.loadingController.create({
+      message: 'Iniciando sesión...',
+      spinner: 'circles'
+    });
+    await loading.present();
+
     try {
       let usuario = await this.firebase.auth(this.email, this.passWord);
       this.tokenID = await usuario.user?.getIdToken();
@@ -46,9 +52,11 @@ export class LoginPage implements OnInit {
         idUsuario: userInfo.data[0].id // Asegúrate que sea el campo correcto
       });
   
+      await loading.dismiss();
       this.router.navigate(['/principal']);
     } catch (error) {
       console.error("Error:", error);
+      await loading.dismiss();
       await this.mostrarMensaje('Error', 'Credenciales inválidas');
     }
   }
@@ -60,21 +68,5 @@ export class LoginPage implements OnInit {
       buttons: ['OK']
     });
     await alert.present();
-  }
-
-  // Este método se puede eliminar ya que su funcionalidad está integrada en login()
-  private async pruebaStorage() {
-    try {
-      const jsonToken = {
-        token: this.tokenID
-      };
-      
-      await this.storage.agregarStorage(jsonToken);
-      const storedData = await this.storage.obtenerStorage();
-      console.log('Datos almacenados:', storedData);
-    } catch (error) {
-      console.error('Error al manejar el storage:', error);
-      throw error;
-    }
   }
 }
