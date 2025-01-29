@@ -1,16 +1,38 @@
+<ion-menu content-id="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>TeLlevoApp</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <ion-item routerLink="/login">INICIAR SESION</ion-item>
+      <ion-item routerLink="/crear-user">CREAR CUENTA</ion-item>
+      <ion-item routerLink="/recuperar-pass">RECUPERAR CONTRASEÑA</ion-item>
+      <ion-item routerLink="/agregar-vehiculo">AGREGAR VEHICULO</ion-item>
+      <ion-item routerLink="/agregar-viaje">AGREGAR VIAJE</ion-item>
+      <ion-item routerLink="/lista-vehiculos">VEHICULOS</ion-item>
+      <ion-item routerLink="/lista-viajes">VIAJES</ion-item>
+
+
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+
 <div class="page-container">
-  <ion-header [translucent]="true" class="ion-no-border">
-    <ion-toolbar color="primary" class="ion-text-center">
+  <ion-header>
+    <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-back-button defaultHref="/"></ion-back-button>
+        <ion-back-button defaultHref="/principal"></ion-back-button>
       </ion-buttons>
-      <ion-title>
-        <div class="carousel">
-          <span>
-            <img src="assets/img/TIPO.png" alt="TIPO" class="header-logo">
-          </span>
-        </div>
-      </ion-title>
+
+      <img src="/assets/img/duoc.png" class="responsive-image" alt="Logo Duoc"/>
+
+      <ion-buttons slot="end">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
@@ -57,11 +79,10 @@
             <ion-card class="vehicle-card">
               <div class="image-container">
                 <img 
-                  [src]="getImageUrl(vehiculo)"
+                  [src]="vehiculo.url_imagen"
                   (error)="handleImageError($event)"
                   [alt]="vehiculo.marca + ' ' + vehiculo.modelo"
                   class="vehicle-image"
-                  onerror="this.src='assets/img/car-placeholder.jpg'"
                 />
               </div>
               <ion-card-header>
@@ -118,7 +139,7 @@
     padding: 20px;
   }
 
-  .header-logo {
+  .responsive-image {
     max-width: 150px;
     height: auto;
     display: block;
@@ -157,7 +178,6 @@
     position: relative;
     overflow: hidden;
     height: 200px;
-    background-color: #f4f4f4;
   }
 
   .vehicle-image {
@@ -166,11 +186,6 @@
     object-fit: cover;
     object-position: center;
     transition: transform 0.3s ease;
-  }
-
-  .vehicle-image.error {
-    object-fit: contain;
-    padding: 20px;
   }
 
   .vehicle-card:hover .vehicle-image {
