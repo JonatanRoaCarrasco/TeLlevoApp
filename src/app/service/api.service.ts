@@ -10,17 +10,23 @@ import { environment } from 'src/environments/environment';
 export class ApiService {
   private apiURL = environment.apiUrl || 'https://uber-nodejs-server-git-d61f89-guillermovillacuratorres-projects.vercel.app/api/';
 
-  private httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    }),
-  };
-
   constructor(private http: HttpClient) {}
 
   private handleError(error: HttpErrorResponse) {
     console.error('Error en la solicitud:', error);
     return throwError(() => new Error('Hubo un error en la solicitud.'));
+  }
+
+  private getHeaders(token?: string) {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    return headers;
   }
 
   async agregarViaje(data: bodyViaje): Promise<any> {
@@ -35,7 +41,10 @@ export class ApiService {
       };
   
       const response = await lastValueFrom(
-        this.http.post<any>(`${this.apiURL}viaje/agregar`, body)
+        this.http.post<any>(`${this.apiURL}viaje/agregar`, body, {
+          headers: this.getHeaders(data.token),
+          withCredentials: true
+        })
       );
       return response;
     } catch (error) {
@@ -54,7 +63,10 @@ export class ApiService {
       console.log('URL de la petición de viaje:', url);
 
       const response = await lastValueFrom(
-        this.http.get<any>(url)
+        this.http.get<any>(url, {
+          headers: this.getHeaders(data.token),
+          withCredentials: true
+        })
       );
       return response;
     } catch (error) {
@@ -73,7 +85,10 @@ export class ApiService {
       console.log('URL de la petición:', url);
   
       const response = await lastValueFrom(
-        this.http.get<any>(url)
+        this.http.get<any>(url, {
+          headers: this.getHeaders(data?.token),
+          withCredentials: true
+        })
       );
       return response;
     } catch (error) {
@@ -90,7 +105,11 @@ export class ApiService {
       };
 
       const response = await lastValueFrom(
-        this.http.get<any>(`${this.apiURL}user/obtener`, { params })
+        this.http.get<any>(`${this.apiURL}user/obtener`, {
+          params,
+          headers: this.getHeaders(data.token),
+          withCredentials: true
+        })
       );
       return response;
     } catch (error) {
@@ -108,8 +127,17 @@ export class ApiService {
       if (data.token) formData.append('token', data.token);
       if (imageFile) formData.append('image_usuario', imageFile, imageFile.name);
 
+      // Note: Don't set Content-Type header for FormData, browser will set it automatically with boundary
+      const headers = new HttpHeaders();
+      if (data.token) {
+        headers.set('Authorization', `Bearer ${data.token}`);
+      }
+
       const response = await lastValueFrom(
-        this.http.post<any>(`${this.apiURL}user/agregar`, formData)
+        this.http.post<any>(`${this.apiURL}user/agregar`, formData, {
+          headers,
+          withCredentials: true
+        })
       );
       return response;
     } catch (error) {
@@ -131,8 +159,17 @@ export class ApiService {
       formData.append('token', data.token);
       formData.append('image', imageFile);
 
+      // Note: Don't set Content-Type header for FormData, browser will set it automatically with boundary
+      const headers = new HttpHeaders();
+      if (data.token) {
+        headers.set('Authorization', `Bearer ${data.token}`);
+      }
+
       const response = await lastValueFrom(
-        this.http.post<any>(`${this.apiURL}vehiculo/agregar`, formData)
+        this.http.post<any>(`${this.apiURL}vehiculo/agregar`, formData, {
+          headers,
+          withCredentials: true
+        })
       );
       return response;
     } catch (error) {
