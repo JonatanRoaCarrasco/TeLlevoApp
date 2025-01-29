@@ -1,13 +1,15 @@
+
 <ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar color="primary" class="ion-text-center">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
-
+    
     <ion-title>
       <div class="carousel">
         <span>
-          <img src="assets/img/TIPO.png" alt="TIPO" class="header-logo" />
+          <img src="assets/img/TIPO.png" alt="TIPO" class="header-logo">
+          
         </span>
       </div>
     </ion-title>
@@ -18,127 +20,131 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content id="main-content" class="ion-padding">
-  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content
-      pullingIcon="chevron-down-circle-outline"
-      pullingText="Desliza para actualizar"
-      refreshingSpinner="circles"
-      refreshingText="Actualizando..."
-    ></ion-refresher-content>
-  </ion-refresher>
 
-  <!-- Loading state -->
-  <div *ngIf="loading" class="loading-container ion-text-center">
-    <ion-spinner name="circles"></ion-spinner>
-    <p>Cargando viajes...</p>
-  </div>
+<div class="page-container">
+ 
 
-  <!-- Error state -->
-  <ion-item *ngIf="error" color="danger" lines="none" class="error-message">
-    <ion-icon name="alert-circle" slot="start"></ion-icon>
-    <ion-label>{{ error }}</ion-label>
-  </ion-item>
+  <ion-content id="main-content" class="ion-padding">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content
+        pullingIcon="chevron-down-circle-outline"
+        pullingText="Desliza para actualizar"
+        refreshingSpinner="circles"
+        refreshingText="Actualizando...">
+      </ion-refresher-content>
+    </ion-refresher>
 
-  <!-- Content -->
-  <div class="content-container" *ngIf="!loading && !error">
-    <h1 class="ion-text-center">Mis Viajes</h1>
-
-    <!-- Empty state -->
-    <div *ngIf="viajes.length === 0" class="empty-state ion-text-center ion-padding">
-      <ion-icon name="car-outline" class="empty-icon"></ion-icon>
-      <h2>No tienes viajes registrados</h2>
-      <p>Comienza agregando tu primer viaje</p>
-      <ion-button routerLink="/agregar-viaje" expand="block" class="ion-margin-top">
-        <ion-icon slot="start" name="add"></ion-icon>
-        Crear Viaje
-      </ion-button>
+    <!-- Loading state -->
+    <div *ngIf="loading" class="loading-container ion-text-center">
+      <ion-spinner name="circles"></ion-spinner>
+      <p>Cargando viajes...</p>
     </div>
 
-    <!-- Viajes list -->
-    <ion-grid *ngIf="viajes.length > 0">
-      <ion-row>
-        <ion-col size="12" size-md="6" *ngFor="let viaje of viajes">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-subtitle class="ion-text-uppercase">
-                <ion-badge [color]="getEstadoColor(viaje.id_estado)" class="estado-badge">
-                  {{ getEstadoViaje(viaje.id_estado) }}
-                </ion-badge>
-                Viaje #{{ viaje.id_viaje }}
-              </ion-card-subtitle>
-              <ion-card-title>
-                <ion-icon name="location-outline"></ion-icon>
-                {{ viaje.ubicacion_origen }} → {{ viaje.ubicacion_destino }}
-              </ion-card-title>
-            </ion-card-header>
+    <!-- Error state -->
+    <ion-item *ngIf="error" color="danger" lines="none" class="error-message">
+      <ion-icon name="alert-circle" slot="start"></ion-icon>
+      <ion-label>{{ error }}</ion-label>
+    </ion-item>
 
-            <ion-card-content>
-              <ion-list lines="none">
-                <!-- Costo -->
-                <ion-item>
-                  <ion-icon name="cash-outline" slot="start" color="success"></ion-icon>
-                  <ion-label>
-                    <strong>Costo:</strong> ${{ viaje.costo }}
-                  </ion-label>
-                </ion-item>
+    <div class="content-container" *ngIf="!loading">
+      <h1 class="ion-text-center">Mis Viajes</h1>
 
-                <!-- Vehículo -->
-                <ion-item>
-                  <ion-icon name="car-outline" slot="start" color="primary"></ion-icon>
-                  <ion-label>
-                    <strong>Vehículo:</strong><br />
-                    {{ viaje.vehiculo?.marca }} {{ viaje.vehiculo?.modelo }}<br />
-                    Patente: {{ viaje.vehiculo?.patente }}
-                  </ion-label>
-                </ion-item>
+      <!-- Empty state -->
+      <div *ngIf="viajes.length === 0" class="empty-state ion-text-center ion-padding">
+        <ion-icon name="car-outline" class="empty-icon"></ion-icon>
+        <h2>No tienes viajes registrados</h2>
+        <p>Comienza agregando tu primer viaje</p>
+        <ion-button routerLink="/agregar-viaje" expand="block" class="ion-margin-top">
+          <ion-icon slot="start" name="add"></ion-icon>
+          Crear Viaje
+        </ion-button>
+      </div>
 
-                <!-- Fecha -->
-                <ion-item>
-                  <ion-icon name="calendar-outline" slot="start" color="tertiary"></ion-icon>
-                  <ion-label>
-                    <strong>Fecha:</strong><br />
-                    {{ formatearFecha(viaje.fecha_registro) }}
-                  </ion-label>
-                </ion-item>
+      <!-- Viajes grid -->
+      <ion-grid *ngIf="viajes.length > 0">
+        <ion-row>
+          <ion-col size="12" size-md="6" *ngFor="let viaje of viajes">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-subtitle class="ion-text-uppercase">
+                  <ion-badge [color]="getEstadoColor(viaje.id_estado)" class="estado-badge">
+                    {{getEstadoViaje(viaje.id_estado)}}
+                  </ion-badge>
+                  Viaje #{{viaje.id_viaje}}
+                </ion-card-subtitle>
+                <ion-card-title>
+                  <ion-icon name="location-outline"></ion-icon>
+                  {{viaje.ubicacion_origen}} → {{viaje.ubicacion_destino}}
+                </ion-card-title>
+              </ion-card-header>
 
-                <!-- Estado -->
-                <ion-item>
-                  <ion-icon
-                    [name]="getIconoEstado(viaje.id_estado)"
-                    [color]="getEstadoColor(viaje.id_estado)"
-                    slot="start"
-                  ></ion-icon>
-                  <ion-label>
-                    <strong>Estado:</strong><br />
-                    {{ getEstadoViaje(viaje.id_estado) }}
-                  </ion-label>
-                </ion-item>
-              </ion-list>
+              <ion-card-content>
+                <ion-list lines="none">
+                  <!-- Costo -->
+                  <ion-item>
+                    <ion-icon name="cash-outline" slot="start" color="success"></ion-icon>
+                    <ion-label>
+                      <strong>Costo:</strong> ${{viaje.costo}}
+                    </ion-label>
+                  </ion-item>
+                  
+                  <!-- Vehículo -->
+                  <ion-item>
+                    <ion-icon name="car-outline" slot="start" color="primary"></ion-icon>
+                    <ion-label>
+                      <strong>Vehículo:</strong><br>
+                      {{viaje.vehiculo?.marca}} {{viaje.vehiculo?.modelo}}<br>
+                      Patente: {{viaje.vehiculo?.patente}}
+                    </ion-label>
+                  </ion-item>
 
-              <!-- Botones de acción -->
-              <div class="ion-text-end ion-padding-top" *ngIf="isEstadoActivo(viaje.id_estado)">
-                <ion-button fill="clear" color="danger" (click)="cancelarViaje(viaje.id_viaje)">
-                  <ion-icon slot="start" name="close-circle"></ion-icon>
-                  Cancelar
-                </ion-button>
-              </div>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+                  <!-- Fecha -->
+                  <ion-item>
+                    <ion-icon name="calendar-outline" slot="start" color="tertiary"></ion-icon>
+                    <ion-label>
+                      <strong>Fecha:</strong><br>
+                      {{formatearFecha(viaje.fecha_registro)}}
+                    </ion-label>
+                  </ion-item>
 
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button (click)="irAgregarViaje()" color="primary">
-        <ion-icon name="add"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
-  </div>
-</ion-content>
+                  <!-- Estado -->
+                  <ion-item>
+                    <ion-icon 
+                      [name]="getIconoEstado(viaje.id_estado)"
+                      [color]="getEstadoColor(viaje.id_estado)"
+                      slot="start">
+                    </ion-icon>
+                    <ion-label>
+                      <strong>Estado:</strong><br>
+                      {{getEstadoViaje(viaje.id_estado)}}
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
 
-<ion-footer class="footer">
-  <ion-toolbar>
-    <ion-title class="ion-text-center">Desarrollado por Jon.Roa</ion-title>
-  </ion-toolbar>
-</ion-footer>
+                <!-- Botones de acción -->
+                <div class="ion-text-end ion-padding-top" *ngIf="isEstadoActivo(viaje.id_estado)">
+                  <ion-button fill="clear" color="danger" (click)="cancelarViaje(viaje.id_viaje)">
+                    <ion-icon slot="start" name="close-circle"></ion-icon>
+                    Cancelar
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button (click)="irAgregarViaje()" color="primary">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </div>
+  </ion-content>
+
+  <ion-footer class="footer">
+    <ion-toolbar>
+      <ion-title class="ion-text-center">Desarrollado por Jon.Roa</ion-title>
+    </ion-toolbar>
+  </ion-footer>
+</div>
